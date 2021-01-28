@@ -1,0 +1,88 @@
+int rows = 10;
+int gridsize = 500 / rows;
+
+int blocks = 4;
+
+int block1[] = {0, 0, 50, 50};
+
+boolean grid[][] = new boolean[10][10];
+
+float generator[] = {225, 50, 20};
+float goal[] = {200, 75, 20};
+int laserDirX = 250;
+int laserDirY = 75;
+int laserVecX = 25;
+int laserVecY = 25;
+
+void setup() {
+  size(500, 500);
+}
+
+void draw() {
+  background(#363636);
+  stroke(#969696);
+  fill(#00897b);
+  
+  for (int y = 0; y < rows; ++y)
+  for (int x = 0; x < rows; ++x) {
+    line(50, gridsize*y, width-50, gridsize*y);
+    line(gridsize*x, 50, gridsize*x, height-50);
+    
+    if (grid[x][y]) rect(gridsize*x, gridsize*y, gridsize, gridsize);
+  }
+  fill(#F57B1E);
+  circle(generator[0], generator[1], generator[2]);
+  
+  fill(#000000);
+  circle(goal[0], goal[1], goal[2]);
+  fireLaser();
+ //<>//
+
+  
+  fill(#ffffff);
+  scale(2);
+  text("Blocks: " + blocks, 10, 10);
+  scale(0.5);
+
+}
+
+void mouseClicked() {
+  draw();
+  if(mouseX > 50 && mouseX < 450 && mouseY > 50 && mouseY < 450){
+    int x = mouseX/gridsize;
+    
+    int y = mouseY/gridsize;
+    println(mouseX/gridsize, mouseY/gridsize);
+    boolean flag = grid[x][y];
+    grid[x][y] = !flag;
+  
+    if (!flag){
+      --blocks;
+      block1[0] = x * 50;
+      block1[1] = y * 50;
+      
+    } else{
+      ++blocks;
+    }
+  
+    if (blocks < 0) {
+      blocks = 0;
+      grid[x][y] = !grid[x][y];
+    }
+  }
+}
+
+void fireLaser(){
+  stroke(#F70000);
+  strokeWeight(4);
+  
+  if(laserDirX < 500 && laserDirY < 500 && laserDirX > 0 && laserDirY > 0){
+    if(laserDirX == block1[0]){
+     laserVecX *= -1;    
+   }
+   laserDirX += laserVecX;
+   laserDirY += laserVecY;
+  }
+    line(generator[0], generator[1], laserDirX, laserDirY);
+}
+  
